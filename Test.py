@@ -1,5 +1,6 @@
 import random, time
-from colorama import Fore, Back, Style
+import sys
+from colorama import Fore, Style
 
 P1 = [0, 4, True]
 P2 = [0, 4]
@@ -26,7 +27,6 @@ def start():
     P2_Name = input()
     
     random.shuffle(Cartes)
-    
     AffichePlateau(P1, P2, Trap)
     time.sleep(Speed)
     TourSuivant(Cartes)
@@ -72,14 +72,13 @@ def retry():
         answer = input().strip().upper()
     if answer == 'Q':
         print("Au revoir !")
-        quit()
+        sys.exit(0)
     elif answer == 'R':
         restart(P1_Name, P2_Name, Score)
 
 def TourSuivant(Cartes):
     global numTour
     numTour += 1
-    
     if (P1[1] < 1): mort("p1")
     if (P2[1] < 1): mort("p2")
     
@@ -103,7 +102,6 @@ def TourSuivant(Cartes):
         Cartes = ["av1_1","av1_2","av1_3","av1_4","av1_5","av1_6","av2_1","av2_2","av2_3","av2_4","av2_5","av2_6","av3_1","av3_2","av3_3","av3_4","av3_5","av3_6","Carotte_1","Carotte_2","Carotte_3","Carotte_4","Carotte_5","Carotte_6"]
         random.shuffle(Cartes)
 
-    # Détermination du joueur actuel pour l'affichage
     joueur_actuel = P1_Name if P1[2] else P2_Name
     
     if P1[2] == True:
@@ -115,20 +113,18 @@ def TourSuivant(Cartes):
         # P2 joue
         c = tirerCarte(Cartes, joueur_actuel)
         activeEffect(P1, c, joueur_actuel)
-        P1[2] = True # Changement de tour
+        P1[2] = True
 
     AffichePlateau(P1, P2, Trap)
     TourSuivant(Cartes)
 
 def SwitchTrap():
     global Trap
-    # Correction de la logique ici
+
     if Trap == False:
-        # Activation du piège
         Trap = True
         print(f"{Fore.YELLOW}🚧 CRIC CRAC ! Les trous s'ouvrent ! 🚧{Style.RESET_ALL}")
         
-        # Vérification immédiate de la chute
         if P1[0] in (6, 13, 20):
             P1[0] = 0
             P1[1] -= 1
@@ -280,10 +276,7 @@ def fin(WIN):
     print(f"{WIN} a gagné")
     PrintScore(Score)
     retry()
-
-def quit():
-    print("fin")
-
+    
 def mort(p):
     if p == "p1":
         print(f"{P1_Name} est mort 💀, fin de partie {P2_Name} gagne")
